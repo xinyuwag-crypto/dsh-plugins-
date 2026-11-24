@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Disk cleanup",
+    "description": "Finds and clears reclaimable space on this computer: temp files, Windows Update cache, installer packages in Downloads, application and browser caches, duplicate files, and the recycle bin. Use disk_cleanup_scan to preview, disk_cleanup_run with confirm: true to clean, disk_cleanup_restore to undo within 7 days, and disk_cleanup_status to review results. Temp files, caches, and the recycle bin are deleted permanently; installers and duplicate files move to a quarantine directory under %USERPROFILE%\\.dsh\\disk-cleanup that expires after 7 days. Clearing C:\\Windows\\Temp and the Windows Update cache needs an administrator session, otherwise those targets are reported as skipped. Disabling the plugin stops the tools but leaves cleaned or quarantined files untouched."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Plugin delivery workflow",
+    "description": "Adds the plugin-delivery-workflow skill: a staged workflow with an OPC operation chart for shipping scripts into DSH as plugins, scheduled tasks, or desktop components. The skill carries the intake template, gate criteria, a completion checklist, and the failure modes observed while building the disk-cleanup plugin (unverified defaults, desktop path traps, PowerShell serialization quirks, rollback round-trips). It registers a skill only; it changes no files and runs nothing until that skill is loaded. Disabling the bundle removes the skill; existing plugins and schedules keep working."
+  }
+}

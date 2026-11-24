@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  modules:
+    name: Load plugin modules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import every bundle and assert its export shape
+        run: |
+          set -euo pipefail
+          for pkg in dsh-disk-cleanup dsh-workflow-skill; do
+            echo "checking ${pkg}"
+            node --input-type=module -e "
+              const m = await import('./${pkg}/index.js');
+              if (typeof m.apply !== 'function') throw new Error('${pkg}: apply export is missing');
+              if (!Array.isArray(m.inject)) throw new Error('${pkg}: inject export is missing');
+              console.log('${pkg}: ok, inject =', m.inject.join(','));
+            "
+          done
+      - name: Validate JSON resources
+        run: |
+          set -euo pipefail
+          git ls-files '*.json' | while read -r file; do
+            node -e "JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8'))" "$file"
+            echo "valid: $file"
+          done
+
+  powershell:
+    name: Parse PowerShell scripts
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse every .ps1 with the PowerShell AST parser
+        shell: pwsh
+        run: |
+          $failed = $false
+          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$errors)
+            if ($errors.Count -gt 0) {
+              $failed = $true
+              foreach ($e in $errors) {
+                Write-Host "::error file=$($_.FullName),line=$($e.Extent.StartLineNumber)::$($e.Message)"
+              }
+            } else {
+              Write-Host "parsed: $($_.Name)"
+            }
+          }
+          if ($failed) { exit 1 }

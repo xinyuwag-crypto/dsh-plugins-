@@ -1,0 +1,25 @@
+{
+  "name": "@local/dsh-disk-cleanup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Disk cleanup tools for DSH: scan, clean, restore, and status for temp files, Windows Update cache, installers, caches, duplicates, and the recycle bin.",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "scripts",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ]
+}
